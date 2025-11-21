@@ -19,7 +19,9 @@ require 'rspec'
 # TODO: remove this once coding done
 require 'pry'
 require_relative '../lib/models/package'
+require_relative '../lib/models/shipment'
 require_relative '../lib/services/delivery_cost_calculator'
+require_relative '../lib/services/delivery_time_calculator'
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

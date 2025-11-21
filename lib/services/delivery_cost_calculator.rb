@@ -14,7 +14,7 @@ class DeliveryCostCalculator
     when 'OFR001'
       return 0.10 if pkg.distance_in_km < 200 && pkg.weight_in_kg.between?(70, 200)
     when 'OFR002'
-      return 0.25 if pkg.distance_in_km.between?(50, 150) && pkg.weight_in_kg.between?(100, 250)
+      return 0.07 if pkg.distance_in_km.between?(50, 150) && pkg.weight_in_kg.between?(100, 250)
     when 'OFR003'
       return 0.05 if pkg.distance_in_km.between?(50, 250) && pkg.weight_in_kg.between?(10, 150)
     end
