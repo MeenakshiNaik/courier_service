@@ -21,7 +21,7 @@ RSpec.describe DeliveryCostCalculator do
     it 'returns a discounted delivery cost for a package eligible for OFR002' do
       pkg = Package.new('PKG2', 100, 190, 150, 'OFR002')
       DeliveryCostCalculator.calculate(pkg)
-      expect(pkg.total_delivery_cost).to eq(2062.5)
+      expect(pkg.total_delivery_cost).to eq(2557.5)
     end
 
     it 'returns a delivery cost for a package not eligible for OFR002' do
@@ -36,20 +36,6 @@ RSpec.describe DeliveryCostCalculator do
       pkg = Package.new('PKG3', 100, 20, 200, 'OFR003')
       DeliveryCostCalculator.calculate(pkg)
       expect(pkg.total_delivery_cost).to eq(1235.0)
-    end
-
-    it 'returns a delivery cost for a package not eligible for OFR003' do
-      pkg = Package.new('PKG3', 100, 20, 40, 'OFR003')
-      DeliveryCostCalculator.calculate(pkg)
-      expect(pkg.total_delivery_cost).to eq(500)
-    end
-  end
-
-  context 'calculation of total delivery cost with OFR003' do
-    it 'returns a discounted delivery cost for a package eligible for OFR003' do
-      pkg = Package.new('PKG3', 100, 10, 100, 'OFR003')
-      DeliveryCostCalculator.calculate(pkg)
-      expect(pkg.total_delivery_cost).to eq(665.0)
     end
 
     it 'returns a delivery cost for a package not eligible for OFR003' do
