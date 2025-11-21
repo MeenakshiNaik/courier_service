@@ -2,9 +2,7 @@
 
 require 'spec_helper'
 
-
 RSpec.describe Package do
-
   it 'initializes the package' do
     p = Package.new('PKG1', 100, 10, 50, 'OFR001')
     expect(p.name).to eq('PKG1')

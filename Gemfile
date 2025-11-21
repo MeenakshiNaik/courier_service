@@ -10,4 +10,7 @@ end
 
 group :test do
   gem 'rspec'
+  gem 'rubocop-rspec', require: false # only if using RSpec
 end
+
+gem 'pry'
