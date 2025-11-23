@@ -2,11 +2,12 @@
 
 class DeliveryCostCalculator
   def self.calculate(pkg)
-    pkg.total_delivery_cost = pkg.base_delivery_cost + (pkg.weight_in_kg * 10) + (pkg.distance_in_km * 5)
-
-    discount_rate = self.discount_rate(pkg)
-    total_delivery_cost = pkg.total_delivery_cost * (1 - discount_rate)
-    pkg.total_delivery_cost = total_delivery_cost.round(2)
+    total_delivery_cost = pkg.base_delivery_cost + (pkg.weight_in_kg * 10) + (pkg.distance_in_km * 5)
+    discount_rate = discount_rate(pkg)
+    discount = total_discount(total_delivery_cost, discount_rate)
+    final_cost = (total_delivery_cost - discount).round(2)
+    pkg.discount = discount
+    pkg.total_delivery_cost = final_cost
   end
 
   def self.discount_rate(pkg)
@@ -20,5 +21,9 @@ class DeliveryCostCalculator
     end
 
     0
+  end
+
+  def self.total_discount(total_delivery_cost, discount_rate)
+    (total_delivery_cost * discount_rate).round(2)
   end
 end

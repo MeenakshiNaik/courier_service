@@ -21,18 +21,13 @@ class DeliveryTimeCalculator
       raise 'No valid shipment' unless shipment_pkgs
 
       vehicle_index, start_time = earliest_vehicle
-
       farthest_distance = shipment_pkgs.map(&:distance_in_km).max.to_f
-
       assign_delivery_times(shipment_pkgs, start_time)
-
       return_time = calculate_return_time(start_time, farthest_distance)
-
       last_shipment = remaining_packages.size == shipment_pkgs.size
 
       # Only update return time if there will be more shipments
       update_vehicle_return_time(vehicle_index, return_time, last_shipment)
-
       shipments << record_shipment(shipment_pkgs, vehicle_index, start_time, return_time, last_shipment)
 
       remaining_packages -= shipment_pkgs
