@@ -13,37 +13,29 @@ class DeliveryTimeCalculator
   end
 
   def plan_shipments
-    shipment_pachages = @packages.dup
+    remaining_packages = @packages.dup
     shipments = []
 
-    until shipment_pachages.empty?
-      shipment_pkgs = best_shipment(shipment_pachages)
+    until remaining_packages.empty?
+      shipment_pkgs = best_shipment(remaining_packages)
       raise 'No valid shipment' unless shipment_pkgs
 
       vehicle_index, start_time = earliest_vehicle
 
       farthest_distance = shipment_pkgs.map(&:distance_in_km).max.to_f
 
-      shipment_pkgs.each do |pkg|
-        DeliveryCostCalculator.calculate(pkg) if defined?(DeliveryCostCalculator)
-        pkg.delivery_time = (start_time + pkg.distance_in_km / @vehicle_speed)
-      end
+      assign_delivery_times(shipment_pkgs, start_time)
 
-      return_time = (start_time + 2 * farthest_distance / @vehicle_speed).round(2)
+      return_time = calculate_return_time(start_time, farthest_distance)
 
-      is_last_shipment = shipment_pachages.size == shipment_pkgs.size
+      last_shipment = remaining_packages.size == shipment_pkgs.size
 
       # Only update return time if there will be more shipments
-      @vehicles_available_time[vehicle_index] = return_time unless is_last_shipment
+      update_vehicle_return_time(vehicle_index, return_time, last_shipment)
 
-      shipments << {
-        packages: shipment_pkgs,
-        vehicle_index: vehicle_index,
-        start_time: start_time,
-        return_time: is_last_shipment ? nil : return_time
-      }
+      shipments << record_shipment(shipment_pkgs, vehicle_index, start_time, return_time, last_shipment)
 
-      shipment_pachages -= shipment_pkgs
+      remaining_packages -= shipment_pkgs
     end
 
     shipments
@@ -79,5 +71,29 @@ class DeliveryTimeCalculator
   def earliest_vehicle
     index = @vehicles_available_time.index(@vehicles_available_time.min)
     [index, @vehicles_available_time[index]]
+  end
+
+  def assign_delivery_times(packages, start_time)
+    packages.each do |pkg|
+      DeliveryCostCalculator.calculate(pkg)
+      pkg.delivery_time = start_time + pkg.distance_in_km / @vehicle_speed
+    end
+  end
+
+  def calculate_return_time(start_time, farthest_distance)
+    (start_time + 2 * farthest_distance / @vehicle_speed).round(2)
+  end
+
+  def update_vehicle_return_time(vehicle_index, return_time, last_shipment)
+    @vehicles_available_time[vehicle_index] = return_time unless last_shipment
+  end
+
+  def record_shipment(packages, vehicle_index, start_time, return_time, last)
+    {
+      packages: packages,
+      vehicle_index: vehicle_index,
+      start_time: start_time,
+      return_time: last ? nil : return_time
+    }
   end
 end
