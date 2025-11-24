@@ -13,7 +13,7 @@ Ensure you have Ruby installed:
 ruby -v
 ```
 
-Clone or unzip the folder, then run from the project root:
+Clone repository, then run from the project root:
 ```
 bundle install
 ```
